@@ -6,6 +6,7 @@ import * as FileSystem from "expo-file-system";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import { WizardStore } from "../store";
 import { useIsFocused } from "@react-navigation/native";
+import Toast from 'react-native-toast-message';
 import {
   Button,
   MD3Colors,
@@ -25,7 +26,7 @@ const Sign = ({ navigation }) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Signature User",
+      title: "Aide Signature",
       headerStyle: {
         backgroundColor: "#cf93c0", // Cambia el color de fondo del encabezado
       },
@@ -65,6 +66,14 @@ const Sign = ({ navigation }) => {
     navigation.navigate("Step3");
   };
 
+  const showToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Hello',
+      text2: 'This is some something 👋'
+    });
+  }
+
   const obtenerFormatoFecha = (fecha) => {
     const year = fecha.getFullYear();
     const month = String(fecha.getMonth() + 1).padStart(2, "0");
@@ -98,6 +107,7 @@ const Sign = ({ navigation }) => {
 
   // Called after ref.current.getData()
   const handleData = async (data) => {
+    try{
     const fecha = new Date();
     const formatoFecha = obtenerFormatoFecha(fecha);
 
@@ -120,24 +130,13 @@ const Sign = ({ navigation }) => {
     const downloadURL = await storageRef.getDownloadURL();
     console.log("URL de descarga:", downloadURL);
 
-    const activitiesRef = firestore.collection(
-      `users/${user.email}/activities`
-    );
-
-    // Obtener el último registro (podrías implementar una lógica más específica)
-    const snapshot = await activitiesRef
-      .orderBy("dateStart", "desc")
-      .limit(1)
-      .get();
-
-    if (!snapshot.empty) {
-      const lastActivity = snapshot.docs[0];
-
-      // Añadir el campo dateEnd con la hora actual
-      await lastActivity.ref.update({
-        signatureUserUrl: downloadURL,
-      });
+    navigation.navigate("Step3");
+    }catch (error) {
+      // Manejo del error: Mostrar un mensaje al usuario
+      console.error("Error al guardar la firma:", error);
+      showToast();
     }
+
   };
 
   return (
@@ -160,16 +159,6 @@ const Sign = ({ navigation }) => {
           style={styles.button}
         >
           Back
-        </Button>
-
-        <Button
-          onPress={handleSubmit(onSubmit)}
-          mode="outlined"
-          icon={"arrow-right"}
-          direction="rtl"
-          style={styles.button2}
-        >
-          Next
         </Button>
       </View>
     </View>

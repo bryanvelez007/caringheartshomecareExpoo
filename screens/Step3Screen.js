@@ -6,6 +6,7 @@ import * as FileSystem from "expo-file-system";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import { WizardStore } from "../store";
 import { useIsFocused } from "@react-navigation/native";
+import Toast from 'react-native-toast-message';
 import {
   Button,
   MD3Colors,
@@ -25,7 +26,7 @@ const Sign = ({ navigation }) => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Signature Client",
+      title: "Client Signature",
       headerStyle: {
         backgroundColor: "#cf93c0", // Cambia el color de fondo del encabezado
       },
@@ -75,6 +76,14 @@ const Sign = ({ navigation }) => {
     return `${year}_${month}_${day}_${hours}_${minutes}`;
   };
 
+  const showToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Hello',
+      text2: 'This is some something 👋'
+    });
+  }
+
   // Called after ref.current.readSignature() reads a non-empty base64 string
   const handleOK = (signature) => {
     setSign(signature);
@@ -98,13 +107,15 @@ const Sign = ({ navigation }) => {
 
   // Called after ref.current.getData()
   const handleData = async (data) => {
+
+    try{
     const fecha = new Date();
     const formatoFecha = obtenerFormatoFecha(fecha);
 
     // Convertir la firma de base64 a un archivo de imagen
     const fileName = "signature_client_" + formatoFecha + ".png";
     const filePath = FileSystem.documentDirectory + fileName;
-    FileSystem.writeAsStringAsync(
+    await FileSystem.writeAsStringAsync(
       filePath,
       signature.replace("data:image/png;base64,", ""),
       { encoding: FileSystem.EncodingType.Base64 }
@@ -138,6 +149,13 @@ const Sign = ({ navigation }) => {
         signatureClientUrl: downloadURL,
       });
     }
+
+    navigation.navigate("Confirmation");
+  }catch (error) {
+    // Manejo del error: Mostrar un mensaje al usuario
+    console.error("Error al guardar la firma:", error);
+    showToast();
+  }
   };
 
   return (

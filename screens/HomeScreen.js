@@ -86,10 +86,10 @@ const HomeScreen = ({ navigation }) => {
     if (SelectScreen == "CheckIn") {
       Popup.show({
         type: "Success",
-        title: "Did you arrive for the patient?",
+        title: "Did you arrive?",
         button: true,
         button2: true,
-        textBody: "If you have already arrived at the patient's home, you can dial Arrived.",
+        textBody: "",
         buttonText: "Arrived",
         buttonText2: "Cancel",
         callback: () => {

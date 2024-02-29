@@ -1159,6 +1159,7 @@ export default function Step1Screen({ navigation }) {
                 name: "reportRedness",
                 title: "Report Redness",
                 style: styles.tituloXs,
+                required: true
               }}
             />
           </View>
@@ -1773,6 +1774,7 @@ export default function Step1Screen({ navigation }) {
                 name: "specialDietComment",
                 title: "Comments",
                 style: styles.tituloXs,
+                required: true
               }}
             />
           </View>
@@ -2057,7 +2059,9 @@ export default function Step1Screen({ navigation }) {
                 name: "measureIntakeOutputComment",
                 title: "Number",
                 style: styles.tituloXs,
+                required: false
               }}
+              required={false}
             />
           </View>
           {/* FINAL PREGUNTA 15*/}
@@ -2280,6 +2284,7 @@ export default function Step1Screen({ navigation }) {
                 name: "weighClientComment",
                 title: "How much?",
                 style: styles.tituloXs,
+                required: true
               }}
             />
           </View>
@@ -2381,6 +2386,7 @@ export default function Step1Screen({ navigation }) {
                 name: "observedChangesAndReportedComment",
                 title: "Comments",
                 style: styles.tituloXs,
+                required: true
               }}
             />
           </View>
@@ -2478,6 +2484,7 @@ export default function Step1Screen({ navigation }) {
                 name: "shoppingComment",
                 title: "Miles",
                 style: styles.tituloXs,
+                required: true
               }}
             />
           </View>
@@ -3292,6 +3299,7 @@ export default function Step1Screen({ navigation }) {
                 name: "otherDutiesComment",
                 title: "Comments",
                 style: styles.tituloXs,
+                required: true
               }}
             />
 
@@ -3389,14 +3397,14 @@ const styles = StyleSheet.create({
   },
 });
 
-function RHFTextInput({ control, errors, inputProps }) {
+function RHFTextInput({ control, errors, inputProps}) {
   return (
     <View style={{ paddingHorizontal: 16 }}>
       <View style={styles.formEntry}>
         <Controller
           control={control}
           rules={{
-            required: true,
+            required: inputProps.required,
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
